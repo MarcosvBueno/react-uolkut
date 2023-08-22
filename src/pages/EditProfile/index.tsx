@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import EditForm from "../../components/EditForm";
-import { Container, ProfileSide} from "./style";
-import UserProfileHeader from '../../components/UserProfileHeader';
+import { Container, ProfileHeader,UserProfile} from "./style";
 import { UserContext } from "../../context/user-context";
 import Modal from "../../components/Modal";
+import editLogo from "../../assets/img/Mode-edit.svg";
 function EditProfile() {
 
 //The constant retrieves shared functions and variables from the user context in the application to manage the login state and modal visibility.
@@ -22,14 +22,13 @@ function EditProfile() {
   return (
     <>
     <Container>
-      <ProfileSide>
-      <UserProfileHeader
-        name="Iuri Silva"
-        status="Solteiro, Brasil"
-        buttonContent="Salvar"
-        handleButton={handleModal}
-      />
-      </ProfileSide>
+    <ProfileHeader>
+      <UserProfile>
+        <img src='https://i.imgur.com/jguCgC7.png' alt="" />
+        <img src={editLogo} alt="" />
+      </UserProfile>
+      
+    </ProfileHeader>
       <EditForm />
     </Container>
     {modalIsVisible && <Modal imageLogo={""} text={"Informações alteradas ✔"} buttonContent={"Voltar para o perfil"} buttonLink={"/profile"} />}
