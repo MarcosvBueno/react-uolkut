@@ -14,7 +14,6 @@ function Header() {
       <div>
         <img src={logo} alt="" />
         <nav>
-          <a href="/">Sobre o Orkut</a>
           <a href="/">Centro de segurança</a>
         </nav>
       </div>

@@ -1,157 +1,160 @@
-import { EditFormContainer } from "./style";
-import EditDetails from "../EditDetails";
+import { EditFormContainer, Input, FormContainer } from './style';
+import UserInput from '../../hooks/user-input';
+import { useState } from 'react';
+import caretDown from '../../assets/img/CaretDown.svg'
+
 function EditForm() {
-  const handleContentChange = (
-    event: React.FocusEvent<HTMLParagraphElement>,
-    field: string
-  ) => {
-    const newValue = event.target.innerText;
-    console.log(`Campo "${field}" atualizado para: ${newValue}`);
+  const [editUser, setEditUser] = useState({});
+  const [selectedStatus, setSelectedStatus] = useState('');
+
+  const civilStatusOptions = [
+    'Solteiro(a)',
+    'Casado(a)',
+    'Divorciado(a)',
+    'Viúvo(a)'
+  ];
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStatus(event.target.value);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLParagraphElement>) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      event.currentTarget.blur();
-    }
-  };
+  const {
+    value: profession,
+    isValid: professionIsValid,
+    hasError: professionHasError,
+    valueChangeHandler: professionChangeHandler,
+    inputBlurHandler: professionBlurHandler,
+    reset: resetProfessionInput
+  } = UserInput(value => value.trim() !== '');
+
+  const {
+    value: city,
+    isValid: cityIsValid,
+    hasError: cityHasError,
+    valueChangeHandler: cityChangeHandler,
+    inputBlurHandler: cityBlurHandler,
+    reset: resetCityInput
+  } = UserInput(value => value.trim() !== '');
+
+  const {
+    value: country,
+    isValid: countryIsValid,
+    hasError: countryHasError,
+    valueChangeHandler: countryChangeHandler,
+    inputBlurHandler: countryBlurHandler,
+    reset: resetCountryInput
+  } = UserInput(value => value.trim() !== '');
+
+  const {
+    value: birthDate,
+    isValid: birthDateIsValid,
+    hasError: birthDateHasError,
+    valueChangeHandler: birthDateChangeHandler,
+    inputBlurHandler: birthDateBlurHandler,
+    reset: resetBirthDateInput
+  } = UserInput(value => value.trim() !== '');
+
+  const {
+    value: password ,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: resetPasswordInput
+  } = UserInput(value => value.length >= 6 && value.trim() !== '');
+
+  const {
+    value: passwordConfirmation,
+    isValid: passwordConfirmationIsValid,
+    hasError: passwordConfirmationHasError,
+    valueChangeHandler: passwordConfirmationChangeHandler,
+    inputBlurHandler: passwordConfirmationBlurHandler,
+    reset: resetPasswordConfirmationInput
+  } = UserInput(value => value === password && value.trim() !== '' && passwordIsValid);
 
   return (
     <EditFormContainer>
-      <h3>Editar Perfil</h3>
       <div>
-        <h2>Relacionamento: </h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "relacionamento")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Solteiro
-        </p>
+        <h1>Editar informações</h1>
+        <FormContainer>
+          <div>
+            <Input
+              type="text"
+              onChange={professionChangeHandler}
+              onBlur={professionBlurHandler}
+              value={profession}
+              professionIsValid={professionIsValid}
+              professionIsInvalid={professionHasError}
+              placeholder="Profissão"
+            />
+
+            <Input
+              type="text"
+              onChange={cityChangeHandler}
+              onBlur={cityBlurHandler}
+              value={city}
+              cityIsValid={cityIsValid}
+              cityIsInvalid={cityHasError}
+              placeholder="Cidade"
+            />
+
+            <Input
+              type="text"
+              onChange={countryChangeHandler}
+              onBlur={countryBlurHandler}
+              value={country}
+              countryIsValid={countryIsValid}
+              countryIsInvalid={countryHasError}
+              placeholder="Pais"
+            />
+
+            <Input
+              type="date"
+              onChange={birthDateChangeHandler}
+              onBlur={birthDateBlurHandler}
+              value={birthDate}
+              birthDateIsValid={birthDateIsValid}
+              birthDateIsInvalid={birthDateHasError}
+              placeholder="DD/MM/AAAA"
+            />
+
+            <Input
+              type="password"
+              onChange={passwordChangeHandler}
+              onBlur={passwordBlurHandler}
+              value={password}
+              passwordIsValid={passwordIsValid}
+              passwordIsInvalid={passwordHasError}
+              placeholder="Senha"
+            />
+
+            <Input
+              type="password"
+              onChange={passwordConfirmationChangeHandler}
+              onBlur={passwordConfirmationBlurHandler}
+              value={passwordConfirmation}
+              passwordConfirmationIsValid={passwordConfirmationIsValid}
+              passwordIsInvalid={passwordConfirmationHasError}
+              placeholder="Repetir Senha"
+            />
+          </div>
+
+          <div>
+            <select value={selectedStatus} onChange={handleStatusChange}>
+              <option value="" disabled>
+                Relacionamento
+              </option>
+              {civilStatusOptions.map(status => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            <img src={caretDown} alt="" />
+          </div>
+        </FormContainer>
+        <button>Salvar</button>
       </div>
-      <div>
-        <h2>Aniversário:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "aniversario")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          21 de julho
-        </p>
-      </div>
-      <div>
-        <h2>Idade:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "idade")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          22
-        </p>
-      </div>
-      <div>
-        <h2>Interesses no Orkut:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "interesses no orkut")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Solteiro
-        </p>
-      </div>
-      <div>
-        <h2>Quem sou eu:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "quem sou eu")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Programador
-        </p>
-      </div>
-      <div>
-        <h2>Filhos:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "filhos")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Não
-        </p>
-      </div>
-      <div>
-        <h2>Sexo:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "sexo")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Masculino
-        </p>
-      </div>
-      <div>
-        <h2>Fumo:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "fumo")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Não
-        </p>
-      </div>
-      <div>
-        <h2>Bebo:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "bebo")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Depende do dia
-        </p>
-      </div>
-      <div>
-        <h2>Moro:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "moro")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Guarantã
-        </p>
-      </div>
-      <div>
-        <h2>País:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "país")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          Brasil
-        </p>
-      </div>
-      <div>
-        <h2>Cidade natal:</h2>
-        <p
-          contentEditable={true}
-          onBlur={(event) => handleContentChange(event, "cidade natal")}
-          onKeyDown={handleKeyDown}
-          suppressContentEditableWarning={true}
-        >
-          São Paulo
-        </p>
-      </div>
-      <EditDetails />
     </EditFormContainer>
   );
 }
