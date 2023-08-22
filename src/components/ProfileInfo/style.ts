@@ -169,6 +169,10 @@ export const PersonalInformation = styled.div`
     font-style: normal;
     font-weight: 400;
   }
+
+  > div:nth-child(8) {
+    margin-bottom: 10rem;
+  }
 `;
 
 export const UserInterests=  styled.section`
