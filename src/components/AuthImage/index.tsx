@@ -1,7 +1,7 @@
 import React from "react";
 import { StyledText, StyledImage } from "./style";
 
-function LoginBackground() {
+function AuthImage() {
   return (
     <div style={{ position: "relative", width: "800px", height: "598px" }}>
       <StyledImage />
@@ -12,4 +12,4 @@ function LoginBackground() {
   );
 }
 
-export default LoginBackground;
+export default AuthImage;

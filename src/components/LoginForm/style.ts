@@ -1,6 +1,77 @@
+import { InputHTMLAttributes } from "react";
 import styled from "styled-components";
 
-const CreateAccountButton = styled.button`
+interface StyledInputProps extends InputHTMLAttributes<HTMLInputElement> {
+    emailIsValid?: boolean;
+    emailIsInvalid?: boolean;
+    passwordIsValid?: boolean;
+    passwordIsInvalid?: boolean;
+}
+
+
+
+export const Input = styled.input<StyledInputProps>`
+  width: 100%; 
+  height: 3.1875rem; 
+  background: var(--bg-text);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0 0.75rem;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  color: #868686;
+
+  &:focus {
+    outline: none;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--error-color);
+  }
+    ${props => props.emailIsInvalid && `border: 0.125rem solid var(--error-color);`}
+    ${props => props.emailIsValid && `border: 0.125rem solid var(--success-color);`}
+    ${props => props.passwordIsInvalid && `border: 0.125rem solid var(--error-color);`}
+    ${props => props.passwordIsValid && `border: 0.125rem solid var(--success-color);`}
+
+
+
+  @media (max-width: 36rem) {
+    margin-top: 0.625rem;
+    width: 100%;
+    }
+
+`;
+
+
+
+export const RememberMeContainer = styled.div`
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    margin-top: 1.25rem; 
+    margin-left: 0.625rem; 
+    user-select: none;
+
+    @media (max-width: 36rem) {
+        margin-left: 0;
+    }
+
+`;
+
+export const RememberMeText = styled.span`
+    color: #868686;
+    font-size: 1rem; 
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.2rem;
+    margin-left: 0.5rem; 
+`;
+
+
+
+export const CreateAccountButton = styled.button`
     background-color: var(--bg-text);
     border: none;
     border-radius: 0.5rem; 
@@ -12,12 +83,11 @@ const CreateAccountButton = styled.button`
     font-weight: 500;
     height: 3.1875rem; 
     line-height: normal;
-    margin-top: 1.25rem; 
     padding: 0.625rem 1.25rem; 
     width: 100%;
 `;
 
-const CustomCheckboxContainer = styled.div`
+export const CustomCheckboxContainer = styled.div`
     align-items: center;
     color: var(--text-color);
     cursor: pointer;
@@ -26,13 +96,13 @@ const CustomCheckboxContainer = styled.div`
     user-select: none;
 `;
 
-const CustomCheckboxInput = styled.input.attrs({ type: "checkbox" })`
+export const CustomCheckboxInput = styled.input.attrs({ type: "checkbox" })`
     height: 0;
     opacity: 0;
     width: 0;
 `;
 
-const CustomCheckboxLabel = styled.label`
+export const CustomCheckboxLabel = styled.label`
     align-items: center;
     background: var(--bg-text);
     border: 0.0625rem solid #dcdcdc; 
@@ -65,54 +135,8 @@ const CustomCheckboxLabel = styled.label`
     }
 `;
 
-const EmailInput = styled.input`
-    background-color: var(--bg-text);
-    border: none;
-    border-radius: 0.5rem; 
-    flex-shrink: 0;
-    font-size: 1rem; 
-    height: 3.1875rem; 
-    margin-top: 1.25rem; 
-    padding: 0.625rem; 
-    width: 100%;
-`;
 
-const ErrorContainer = styled.div`
-    align-items: center;
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 1.25rem; 
-    width: 100%;
-`;
-
-const ErrorMessage = styled.p`
-    color: var(--error-color);
-    font-size: 0.875rem; 
-`;
-
-const ForgotPasswordLink = styled.a`
-    color: var(--brand-color);
-    cursor: pointer;
-    display: block;
-    font-size: 0.875rem; 
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    margin-top: 1.25rem; 
-    text-align: center;
-    text-decoration-line: underline;
-`;
-
-const Form = styled.form`
-    align-items: flex;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    padding: 1.25rem; 
-    width: 24rem; 
-`;
-
-const LoginButton = styled.button`
+export const LoginButton = styled.button`
     background-color: var(--brand-color);
     border: none;
     border-radius: 0.5rem;
@@ -124,87 +148,26 @@ const LoginButton = styled.button`
     font-weight: 500;
     height: 3.1875rem; 
     line-height: normal;
-    margin-top: 1.25rem; 
     padding: 0.625rem 1.25rem; 
     width: 100%;
-`;
 
-const LoginFormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--dark-40);
-    border: none;
-    border-radius: 1.25rem; 
-    height: 37.375rem; 
-    width: 24rem; 
-
-    @media (max-width: 36rem) { 
-        margin-top: 0;
+   @media (max-width: 36rem) {
+        margin-top: 0.625rem;
+      
     }
+
+
 `;
 
-const LoginTitle = styled.h1`
+export const ForgotPasswordLink = styled.a`
     color: var(--brand-color);
-    font-size: 1.5rem;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    margin-top: 1.25rem; 
-`;
-
-
-const LogoImage = styled.img`
-    margin-top: 1.25rem; 
-    margin-bottom: 1.25rem; 
-`;
-
-const PasswordInput = styled.input`
-    background-color: var(--bg-text);
-    border: none;
-    border-radius: 0.5rem;
-    flex-shrink: 0;
-    font-size: 1rem; 
-    height: 3.1875rem; 
-    margin-top: 1.25rem; 
-    padding: 0.625rem; 
-    width: 100%;
-`;
-
-const RememberMeContainer = styled.div`
-    color: var(--text-color);
     cursor: pointer;
-    display: flex;
-    margin-top: 1.25rem; 
-    margin-left: 0.625rem; 
-    user-select: none;
-`;
-
-const RememberMeText = styled.span`
-    color: #868686;
-    font-size: 1rem; 
+    display: block;
+    font-size: 0.875rem; 
     font-style: normal;
     font-weight: 400;
-    line-height: 1.2rem;
-    margin-left: 0.5rem; 
+    line-height: normal;
+    margin-top: 1.25rem; 
+    text-align: center;
+    text-decoration-line: underline;
 `;
-
-export {
-    CreateAccountButton,
-    CustomCheckboxContainer,
-    CustomCheckboxInput,
-    CustomCheckboxLabel,
-    EmailInput,
-    ErrorContainer,
-    ErrorMessage,
-    ForgotPasswordLink,
-    Form,
-    LoginButton,
-    LoginFormContainer,
-    LoginTitle,
-    LogoImage,
-    PasswordInput,
-    RememberMeContainer,
-    RememberMeText,
-};
