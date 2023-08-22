@@ -6,6 +6,14 @@ interface UserContextType {
   setUserIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
   modalIsVisible: boolean;
   setModalIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  loginForm: boolean;
+  setLoginForm: React.Dispatch<React.SetStateAction<boolean>>;
+  registerForm: boolean;
+  setRegisterForm: React.Dispatch<React.SetStateAction<boolean>>;
+  forgotPasswordForm: boolean;
+  setForgotPasswordForm: React.Dispatch<React.SetStateAction<boolean>>;
+  newPasswordForm: boolean;
+  setNewPasswordForm: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Initializing the context with an initial value of null
@@ -17,13 +25,31 @@ interface UserProviderProps {
 }
 
 export const UserProvider = (props: UserProviderProps) => {
-  // State to hold the user login status and modal visibility status
   const [userIsLogged, setUserIsLogged] = useState(false);
   const [modalIsVisible, setModalIsVisible] = useState(false);
-  
+  const [loginForm, setLoginForm] = useState(true);
+  const [registerForm, setRegisterForm] = useState(false);
+  const [forgotPasswordForm, setForgotPasswordForm] = useState(false);
+  const [newPasswordForm, setNewPasswordForm] = useState(false);
+
   return (
     // Providing the state and setter to the context value
-    <UserContext.Provider value={{ userIsLogged, setUserIsLogged,modalIsVisible,setModalIsVisible }}>
+    <UserContext.Provider
+      value={{
+        userIsLogged,
+        setUserIsLogged,
+        modalIsVisible,
+        setModalIsVisible,
+        loginForm,
+        setLoginForm,
+        registerForm,
+        setRegisterForm,
+        forgotPasswordForm,
+        setForgotPasswordForm,
+        newPasswordForm,
+        setNewPasswordForm
+      }}
+    >
       {props.children}
     </UserContext.Provider>
   );

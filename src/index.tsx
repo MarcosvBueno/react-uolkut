@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { createBrowserRouter,RouterProvider } from 'react-router-dom';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import React from 'react';
@@ -27,10 +26,6 @@ const router = createBrowserRouter([
         path: '/edit-profile',
         element: <EditProfile />
       },
-      {
-        path: '/register',
-        element: <Register />
-      }
     ]
   }
 ]);
