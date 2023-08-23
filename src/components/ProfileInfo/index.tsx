@@ -71,22 +71,6 @@ function ProfileInfo() {
             <p>Programador</p>
           </div>
           <div>
-            <h3>Filhos:</h3>
-            <p>Não</p>
-          </div>
-          <div>
-            <h3>Sexo:</h3>
-            <p>Masculino</p>
-          </div>
-          <div>
-            <h3>Fumo:</h3>
-            <p>Não</p>
-          </div>
-          <div>
-            <h3>Bebo:</h3>
-            <p>Depende do dia</p>
-          </div>
-          <div>
             <h3>Moro:</h3>
             <p>Guarantã</p>
           </div>
@@ -95,7 +79,7 @@ function ProfileInfo() {
             <p>Brasil</p>
           </div>
           <div>
-            <h3>Cidade natal:</h3>
+            <h3>Cidade</h3>
             <p>São Paulo</p>
           </div>
 
