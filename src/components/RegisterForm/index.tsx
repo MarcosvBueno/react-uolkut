@@ -72,6 +72,17 @@ function RegisterForm() {
     reset: resetCityRegisterInput
   } = UserInput(value => value.trim() !== '');
 
+
+  const {
+    value: enteredName,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput
+  } = UserInput(value => value.trim() !== '');
+
+
   return (
     <>
       <div>
@@ -103,6 +114,18 @@ function RegisterForm() {
         {passwordHasError && (
           <p className="error-text">Por favor, insira uma senha válida.</p>
         )}
+      </div>
+      
+      <div>
+      <Input
+          type="text"
+          placeholder="Nome"
+          value={enteredName}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
+          nameIsValid={nameIsValid}
+          nameIsInvalid={nameHasError}
+        />
       </div>
 
       <FormContainerRegister>

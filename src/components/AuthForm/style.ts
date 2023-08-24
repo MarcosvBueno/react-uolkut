@@ -12,6 +12,10 @@ export const LoginFormContainer = styled.div`
     border-radius: 1.25rem; 
     height: 37.375rem; 
     width: 24rem;
+    img {
+        padding-top: 1.25rem;
+    }
+
     @media (max-width: 36rem) { 
         margin-top: 0;
         width: 100%;
@@ -26,7 +30,7 @@ export const LoginTitle = styled.h1`
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-    margin-top: 1rem; 
+    margin-top: 0.5rem;
 `;
 
 
