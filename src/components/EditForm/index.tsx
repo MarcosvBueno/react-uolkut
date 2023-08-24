@@ -4,7 +4,6 @@ import { useState } from 'react';
 import caretDown from '../../assets/img/CaretDown.svg'
 
 function EditForm() {
-  const [editUser, setEditUser] = useState({});
   const [selectedStatus, setSelectedStatus] = useState('');
 
   const civilStatusOptions = [
@@ -25,6 +24,15 @@ function EditForm() {
     valueChangeHandler: professionChangeHandler,
     inputBlurHandler: professionBlurHandler,
     reset: resetProfessionInput
+  } = UserInput(value => value.trim() !== '');
+
+  const {
+    value: enteredName,
+    isValid: nameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput
   } = UserInput(value => value.trim() !== '');
 
   const {
@@ -86,6 +94,16 @@ function EditForm() {
               professionIsValid={professionIsValid}
               professionIsInvalid={professionHasError}
               placeholder="Profissão"
+            />
+
+            <Input
+              type="text"
+              placeholder="Nome"
+              value={enteredName}
+              onChange={nameChangeHandler}
+              onBlur={nameBlurHandler}
+              nameIsValid={nameIsValid}
+              nameIsInvalid={nameHasError}
             />
 
             <Input
