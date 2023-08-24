@@ -17,6 +17,8 @@ interface StyledInputProps extends InputHTMLAttributes<HTMLInputElement> {
     cityIsInvalid?: boolean;
     professionIsValid?: boolean;
     professionIsInvalid?: boolean;
+    nameIsValid?: boolean;
+    nameIsInvalid?: boolean;
     
 
 }
@@ -104,6 +106,9 @@ export const Input = styled.input<StyledInputProps>`
   ${props => props.professionIsValid && `border: 0.125rem solid var(--success-color);`}
   ${props => props.professionIsInvalid && `border: 0.125rem solid var(--error-color);`}
   ${props => props.professionIsValid && `border: 0.125rem solid var(--success-color);`}
+  ${props => props.nameIsInvalid && `border: 0.125rem solid var(--error-color);`}
+  ${props => props.nameIsValid && `border: 0.125rem solid var(--success-color);`}
+  
     
 
   @media (max-width: 48rem) {
