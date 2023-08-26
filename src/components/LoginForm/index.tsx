@@ -5,8 +5,12 @@ import { useContext, useEffect, ChangeEvent } from 'react';
 import { UserContext } from '../../context/user-context';
 import { useNavigate } from 'react-router-dom';
 
-function LoginForm() {
+import {signInWithEmailAndPassword,getAuth } from 'firebase/auth';
 
+
+
+function LoginForm() {
+  const navigate = useNavigate();
   
   const [rememberPassword, setRememberPassword] = useState(false);
 
@@ -48,19 +52,31 @@ function LoginForm() {
   }
 
 
-  // Handles the "Remember Me" checkbox change event. Updates the rememberPassword state based on the checkbox status.
+ 
   const handleRememberMeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRememberPassword(e.target.checked);
   };
 
-  const navigate = useNavigate();
-  const handleLoginForm = () => {
-    if(!formIsValid) {
-      return;
-    }
-    setUserIsLogged(true);
+  const handleLoginForm =  () => {
+  const auth = getAuth();
+  signInWithEmailAndPassword(auth, enteredEmail,enteredPassword)
+  .then((userCredential) => {
+    
+    const user = userCredential.user;
+    console.log(user);
     navigate('/profile');
-  };
+    
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode,errorMessage);
+
+  });
+    
+  }
+
+
 
   return ( 
     <>

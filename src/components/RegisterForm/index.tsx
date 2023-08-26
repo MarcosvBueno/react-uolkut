@@ -1,11 +1,40 @@
 import UserInput from '../../hooks/user-input';
 import { FormContainerRegister, SelectContainer,Input } from './style';
 import { LoginButton } from '../LoginForm/style';
-import { useState } from 'react';
+import { useState,useContext} from 'react';
 import caretDown from '../../assets/img/CaretDown.svg';
+import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
+import { auth } from '../../service/firebaseConfig';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { firebaseConfig } from '../../service/firebaseConfig';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/user-context';
 
 function RegisterForm() {
   const [selectedStatus, setSelectedStatus] = useState('');
+  const navigate = useNavigate();
+
+  const [
+    createUserWithEmailAndPassword,
+    user,
+    error,
+] = useCreateUserWithEmailAndPassword(auth)
+
+  const {setRegisterForm,setLoginForm} = useContext(UserContext)!;
+
+  
+  function calculateAge(birthdayDate: string) {
+    const today = new Date();
+    const birthDate = new Date(birthdayDate);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+  
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+  
+    return age;
+  }
 
   const civilStatusOptions = [
     'Solteiro(a)',
@@ -17,6 +46,52 @@ function RegisterForm() {
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStatus(event.target.value);
   };
+
+  const db = getFirestore(firebaseConfig);
+  const usersCollectionRef = collection(db, 'users');
+
+
+
+  async function createNewUser() {
+    try{
+      const createdUser = await createUserWithEmailAndPassword(enteredEmail, enteredPassword);
+      console.log(createdUser);
+      const user = createdUser?.user;
+
+      const calculatedAge = calculateAge(birthdayDate);
+  
+      const docRef = await addDoc(usersCollectionRef, {
+        name: enteredName,
+        email: enteredEmail,
+        password: enteredPassword,
+        birthdayDate: birthdayDate,
+        age: calculatedAge,
+        country: countryRegister,
+        profession: professionRegister,
+        city: cityRegister,
+        civilStatus: selectedStatus
+      });
+  
+      console.log('Document written with ID: ', docRef.id); 
+  
+      resetEmailInput();
+      resetPasswordInput();
+      resetNameInput();
+      resetBirthdayDateInput();
+      resetCountryRegisterInput();
+      resetProfessionRegisterInput();
+      resetCityRegisterInput();
+
+      setRegisterForm(false);
+      setLoginForm(true);
+  
+    } catch (error) {
+      console.log("Erro na criação de usuário",error);
+    }
+
+
+  }
+
 
   const {
     value: enteredEmail,
@@ -189,7 +264,7 @@ function RegisterForm() {
         </select>
         <img src={caretDown} alt="" />
       </SelectContainer>
-      <LoginButton type="submit">Criar conta</LoginButton>
+      <LoginButton type="submit" onClick={createNewUser}>Criar conta</LoginButton>
     </>
   );
 }
