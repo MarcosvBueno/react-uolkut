@@ -1,18 +1,25 @@
-import { useState } from 'react';
+import { useState,CSSProperties } from 'react';
 import { Input, LoginButton, CreateAccountButton, ForgotPasswordLink, RememberMeContainer, CustomCheckboxInput, CustomCheckboxLabel, RememberMeText } from './style';
 import UserInput from '../../hooks/user-input';
 import { useContext, useEffect, ChangeEvent } from 'react';
 import { UserContext } from '../../context/user-context';
 import { useNavigate } from 'react-router-dom';
-
+import Modal from '../Modal';
 import {signInWithEmailAndPassword,getAuth } from 'firebase/auth';
-
+import PacmanLoader from 'react-spinners/PacmanLoader';
 
 
 function LoginForm() {
   const navigate = useNavigate();
-  
+  const [loading, setLoading] = useState(false);
   const [rememberPassword, setRememberPassword] = useState(false);
+  const {setModalIsVisible,modalIsVisible,setUserUid} = useContext(UserContext)!;
+
+  const override: CSSProperties = {
+    display: "block",
+    margin: "0 auto",
+  };
+  
 
   const {setUserIsLogged,setRegisterForm,setLoginForm,setForgotPasswordForm} = useContext(UserContext)!;
 
@@ -51,34 +58,44 @@ function LoginForm() {
     setForgotPasswordForm(true);
   }
 
-
  
   const handleRememberMeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setRememberPassword(e.target.checked);
   };
 
-  const handleLoginForm =  () => {
-  const auth = getAuth();
-  signInWithEmailAndPassword(auth, enteredEmail,enteredPassword)
-  .then((userCredential) => {
-    
-    const user = userCredential.user;
-    console.log(user);
-    navigate('/profile');
-    
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode,errorMessage);
-
-  });
-    
-  }
+  const handleLoginForm = () => {
+    setLoading(true);
+    const auth = getAuth();
+    const delayTime = 4000; // 4 seconds
+    setTimeout(() => {
+      signInWithEmailAndPassword(auth, enteredEmail, enteredPassword)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          setLoading(false);
+          console.log("Login feito com sucesso:", user?.uid);
+          setUserUid(user?.uid);
+          navigate('/profile');
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode, errorMessage);
+          setLoading(false);
+          setModalIsVisible(true);
+          resetEmailInput();
+          resetPasswordInput();
+        });
+    }, delayTime);
+  };
+  
 
 
 
   return ( 
+    <>
+    {loading && (<PacmanLoader color='#ED6D25' loading={loading} size={30} cssOverride={override} />)}
+    {!loading && (  
     <>
     <div>
         <Input
@@ -128,6 +145,8 @@ function LoginForm() {
     <ForgotPasswordLink title="Esqueci a minha senha" onClick={handleForgotPasswordForm}>
       Esqueci a minha senha
     </ForgotPasswordLink>
+    </>)}
+    {modalIsVisible && <Modal imageLogo={""} text={"E-mail ou senha inválidos"} buttonContent={"Tentar novamente"}  buttonFunction={() => setModalIsVisible(false)}/>}
     </>
    );
 }

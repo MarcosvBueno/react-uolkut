@@ -31,7 +31,7 @@ function EditProfile() {
     </ProfileHeader>
       <EditForm />
     </Container>
-    {modalIsVisible && <Modal imageLogo={""} text={"Informações alteradas ✔"} buttonContent={"Voltar para o perfil"} buttonLink={"/profile"} />}
+    {modalIsVisible && <Modal imageLogo={""} text={"Informações alteradas ✔"} buttonContent={"Voltar para o perfil"} />}
     </>
   );
 }
