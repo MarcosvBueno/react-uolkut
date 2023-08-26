@@ -42,7 +42,7 @@ export const Form = styled.form`
     flex-shrink: 0;
     padding: 1.25rem; 
     width: 24rem; 
-    gap: 1.25rem;
+    gap: 1rem;
 
     @media (max-width: 36rem) {
         width: 100%;

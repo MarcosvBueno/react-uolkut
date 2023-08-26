@@ -1,7 +1,7 @@
 import UserInput from '../../hooks/user-input';
-import { FormContainerRegister, SelectContainer,Input } from './style';
+import { FormContainerRegister, SelectContainer, Input } from './style';
 import { LoginButton } from '../LoginForm/style';
-import { useState,useContext} from 'react';
+import { useState, useContext, CSSProperties } from 'react';
 import caretDown from '../../assets/img/CaretDown.svg';
 import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
 import { auth } from '../../service/firebaseConfig';
@@ -9,30 +9,43 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { firebaseConfig } from '../../service/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/user-context';
+import PacmanLoader from 'react-spinners/PacmanLoader';
+import Modal from '../Modal';
 
 function RegisterForm() {
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [
-    createUserWithEmailAndPassword,
-    user,
-    error,
-] = useCreateUserWithEmailAndPassword(auth)
+  const [createUserWithEmailAndPassword, user, error] =
+    useCreateUserWithEmailAndPassword(auth);
 
-  const {setRegisterForm,setLoginForm} = useContext(UserContext)!;
+  const { setRegisterForm, setLoginForm,setModalIsVisible, modalIsVisible } = useContext(UserContext)!;
 
-  
+  const override: CSSProperties = {
+    display: "block",
+    margin: "0 auto",
+  };
+
+  function handleModal() {
+    setModalIsVisible(!modalIsVisible);
+    setRegisterForm(false);
+    setLoginForm(true);
+  }
+
   function calculateAge(birthdayDate: string) {
     const today = new Date();
     const birthDate = new Date(birthdayDate);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-  
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-  
+
     return age;
   }
 
@@ -50,17 +63,22 @@ function RegisterForm() {
   const db = getFirestore(firebaseConfig);
   const usersCollectionRef = collection(db, 'users');
 
-
-
   async function createNewUser() {
-    try{
-      const createdUser = await createUserWithEmailAndPassword(enteredEmail, enteredPassword);
+    const delayTime = 4000; // 4 seconds
+  
+    try {
+      setLoading(true);
+      const createdUser = await createUserWithEmailAndPassword(
+        enteredEmail,
+        enteredPassword
+      );
       console.log(createdUser);
       const user = createdUser?.user;
-
+  
       const calculatedAge = calculateAge(birthdayDate);
   
       const docRef = await addDoc(usersCollectionRef, {
+        uid: user?.uid,
         name: enteredName,
         email: enteredEmail,
         password: enteredPassword,
@@ -69,10 +87,10 @@ function RegisterForm() {
         country: countryRegister,
         profession: professionRegister,
         city: cityRegister,
-        civilStatus: selectedStatus
+        civilStatus: selectedStatus,
       });
   
-      console.log('Document written with ID: ', docRef.id); 
+      console.log('Document written with ID: ', docRef.id);
   
       resetEmailInput();
       resetPasswordInput();
@@ -81,17 +99,18 @@ function RegisterForm() {
       resetCountryRegisterInput();
       resetProfessionRegisterInput();
       resetCityRegisterInput();
-
-      setRegisterForm(false);
-      setLoginForm(true);
   
+
+      setTimeout(() => {
+        setLoading(false);
+        setModalIsVisible(true);
+
+      }, delayTime);
     } catch (error) {
-      console.log("Erro na criação de usuário",error);
+      console.log('Erro na criação de usuário', error);
     }
-
-
   }
-
+  
 
   const {
     value: enteredEmail,
@@ -100,7 +119,9 @@ function RegisterForm() {
     valueChangeHandler: emailChangeHandler,
     inputBlurHandler: emailBlurHandler,
     reset: resetEmailInput
-  } = UserInput(value => value.trim() !== '' && value.includes('@') && value.includes('.'));
+  } = UserInput(
+    value => value.trim() !== '' && value.includes('@') && value.includes('.')
+  );
 
   const {
     value: enteredPassword,
@@ -147,7 +168,6 @@ function RegisterForm() {
     reset: resetCityRegisterInput
   } = UserInput(value => value.trim() !== '');
 
-
   const {
     value: enteredName,
     isValid: nameIsValid,
@@ -157,9 +177,10 @@ function RegisterForm() {
     reset: resetNameInput
   } = UserInput(value => value.trim() !== '');
 
-
   return (
     <>
+    {loading && (<PacmanLoader color='#ED6D25' loading={loading} size={30} cssOverride={override} />)}
+    {!loading && (<>
       <div>
         <Input
           type="email"
@@ -186,13 +207,10 @@ function RegisterForm() {
           passwordIsInvalid={passwordHasError}
           placeholder="Senha"
         />
-        {passwordHasError && (
-          <p className="error-text">Por favor, insira uma senha válida.</p>
-        )}
       </div>
-      
+
       <div>
-      <Input
+        <Input
           type="text"
           placeholder="Nome"
           value={enteredName}
@@ -264,7 +282,11 @@ function RegisterForm() {
         </select>
         <img src={caretDown} alt="" />
       </SelectContainer>
-      <LoginButton type="submit" onClick={createNewUser}>Criar conta</LoginButton>
+      <LoginButton type="submit" onClick={createNewUser}>
+        Criar conta
+      </LoginButton>
+    </>)}
+      {modalIsVisible && <Modal imageLogo={""} text={"Conta criada com sucesso 🎉"} buttonContent={"Voltar para o login"} buttonFunction={handleModal} />}
     </>
   );
 }

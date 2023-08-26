@@ -52,7 +52,7 @@ export const SelectContainer = styled.div`
   
 
   select{
-  width: 11.3125rem;
+  width: 9.8rem;
   height: 2.1875rem;
     background: var(--bg-text);
     color: #868686;
@@ -66,11 +66,9 @@ export const SelectContainer = styled.div`
 
   img{
     width: 1.4rem;
-    height: 1.4rem;
     position: relative;
-    right: 1rem;
-
-    bottom: 1.8rem;
+    right: 0.4rem;
+    bottom: 3rem;
   };
 `;
 

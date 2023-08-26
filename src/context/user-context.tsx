@@ -14,6 +14,9 @@ interface UserContextType {
   setForgotPasswordForm: React.Dispatch<React.SetStateAction<boolean>>;
   newPasswordForm: boolean;
   setNewPasswordForm: React.Dispatch<React.SetStateAction<boolean>>;
+  userUid: string;
+  setUserUid: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 // Initializing the context with an initial value of null
@@ -31,6 +34,7 @@ export const UserProvider = (props: UserProviderProps) => {
   const [registerForm, setRegisterForm] = useState(false);
   const [forgotPasswordForm, setForgotPasswordForm] = useState(false);
   const [newPasswordForm, setNewPasswordForm] = useState(false);
+  const [userUid, setUserUid] = useState('');
 
   return (
     // Providing the state and setter to the context value
@@ -47,7 +51,9 @@ export const UserProvider = (props: UserProviderProps) => {
         forgotPasswordForm,
         setForgotPasswordForm,
         newPasswordForm,
-        setNewPasswordForm
+        setNewPasswordForm,
+        userUid,
+        setUserUid
       }}
     >
       {props.children}
