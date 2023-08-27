@@ -15,7 +15,7 @@ import { useEffect ,useContext,useState, CSSProperties} from 'react';
 import { UserContext } from '../../context/user-context';
 import { collection, query, where, getDocs,getFirestore} from "firebase/firestore";
 import PacmanLoader from 'react-spinners/PacmanLoader';
-
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 
 interface User {
@@ -38,33 +38,45 @@ function ProfileInfo() {
   const {userUid} = useContext(UserContext)!;
 
   useEffect(() => {
-    getUserData();
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const storedUserData = localStorage.getItem('userData');
+        if (storedUserData) {
+          setUserData(JSON.parse(storedUserData));
+        } else {
+          getUserData(userUid);
+        }
+      }
+    });
   }, []);
+
 
   const override: CSSProperties = {
     display: "block",
     margin: "300px auto",
   };
 
-  const getUserData = async () => {
+
+  const getUserData = async (uid : string) => {
     setLoading(true);
     try {
       console.log(userUid);
       console.log('teste');
       const db = getFirestore();
-      const q = query(collection(db, "users"), where("uid", "==", userUid));
+      const q = query(collection(db, "users"), where("uid", "==", uid));
   
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
         setUserData(doc.data() as User);
+        localStorage.setItem('userData', JSON.stringify(doc.data()));
       });
       setLoading(false);
     } catch (error) { 
       console.error("Error fetching user data:", error);
       
     }
-    console .log(userData);
   }
   
 

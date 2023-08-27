@@ -5,6 +5,7 @@ interface UserProfileHeaderProps {
   name: string;
   status: string;
   buttonContent: string;
+  imageUser?: string;
   handleButton?: () => void;
 }
 
@@ -13,12 +14,13 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   status,
   buttonContent,
   handleButton,
+  imageUser
 }) => {
 
   return (
     <ProfileHeader>
       <UserProfile>
-        <img src='https://i.imgur.com/jguCgC7.png' alt="" />
+        <img src={imageUser} alt="" />
         <h2>{name}</h2>
         <p>{status}</p>
       </UserProfile>

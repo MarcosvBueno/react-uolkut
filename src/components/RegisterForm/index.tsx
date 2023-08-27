@@ -80,8 +80,7 @@ function RegisterForm() {
       const docRef = await addDoc(usersCollectionRef, {
         uid: user?.uid,
         name: enteredName,
-        email: enteredEmail,
-        password: enteredPassword,
+        imageUser: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngarts.com%2Fpt%2Fexplore%2F215270&psig=AOvVaw1vt2v_CGcelG-CdAT5iUo0&ust=1693172385057000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCPC06oOl-4ADFQAAAAAdAAAAABA5",
         birthdayDate: birthdayDate,
         age: calculatedAge,
         country: countryRegister,
@@ -207,6 +206,9 @@ function RegisterForm() {
           passwordIsInvalid={passwordHasError}
           placeholder="Senha"
         />
+        {passwordHasError && (
+          <p className="error-text">Por favor, insira uma senha válida.</p>
+        )}
       </div>
 
       <div>
@@ -231,7 +233,7 @@ function RegisterForm() {
             onBlur={birthdayDateBlurHandler}
             birthdayDateIsValid={birthdayDateIsValid}
             birthdayDateIsInvalid={birthdayDateHasError}
-            placeholder="Nascimento"
+            placeholder="yy/mm/dd"
           />
 
           <Input

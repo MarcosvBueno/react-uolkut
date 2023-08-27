@@ -8,7 +8,6 @@ import Modal from '../Modal';
 import {signInWithEmailAndPassword,getAuth } from 'firebase/auth';
 import PacmanLoader from 'react-spinners/PacmanLoader';
 
-
 function LoginForm() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -24,6 +23,7 @@ function LoginForm() {
   const {setUserIsLogged,setRegisterForm,setLoginForm,setForgotPasswordForm} = useContext(UserContext)!;
 
   useEffect(() => {
+    localStorage.removeItem('userData');
     setUserIsLogged(false);
   }, [setUserIsLogged]);
 
@@ -67,6 +67,8 @@ function LoginForm() {
     setLoading(true);
     const auth = getAuth();
     const delayTime = 4000; // 4 seconds
+    
+
     setTimeout(() => {
       signInWithEmailAndPassword(auth, enteredEmail, enteredPassword)
         .then((userCredential) => {
@@ -75,7 +77,8 @@ function LoginForm() {
           setLoading(false);
           console.log("Login feito com sucesso:", user?.uid);
           setUserUid(user?.uid);
-          navigate('/profile');
+          navigate('/profile', { replace: true });
+
         })
         .catch((error) => {
           const errorCode = error.code;
