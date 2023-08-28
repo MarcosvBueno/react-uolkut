@@ -8,8 +8,6 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/user-context';
 import logo from '../../assets/img/logo-orkut-simples.svg';
-import UserInput from '../../hooks/user-input';
- 
 import {Form,LoginFormContainer,LoginTitle,} from './style';
 import RegisterForm from '../RegisterForm';
 import LoginForm from '../LoginForm';
@@ -20,6 +18,8 @@ function AuthForm() {
   const [pageTitle, setPageTitle] = useState('Acesse o OULrkut');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const {setUserIsLogged,loginForm,registerForm,forgotPasswordForm,newPasswordForm} = useContext(UserContext)!;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setUserIsLogged(false);
@@ -43,9 +43,11 @@ function AuthForm() {
   };
 
 
+
   return (
     <LoginFormContainer>
-      <img src={logo} alt="Logo" />
+     <img src={logo} alt="Logo" />
+      
       <LoginTitle>{pageTitle}</LoginTitle>
       <Form onSubmit={handleSubmit}>
 
