@@ -15,22 +15,31 @@ import Modal from '../Modal';
 function RegisterForm() {
   const [selectedStatus, setSelectedStatus] = useState('');
   const [loading, setLoading] = useState(false);
+  const [ModalError, setModalError] = useState(false);
   const navigate = useNavigate();
 
   const [createUserWithEmailAndPassword, user, error] =
     useCreateUserWithEmailAndPassword(auth);
 
-  const { setRegisterForm, setLoginForm,setModalIsVisible, modalIsVisible } = useContext(UserContext)!;
+  const { setRegisterForm, setLoginForm, setModalIsVisible, modalIsVisible } =
+    useContext(UserContext)!;
 
   const override: CSSProperties = {
-    display: "block",
-    margin: "0 auto",
+    display: 'block',
+    margin: '0 auto'
   };
+
+  
 
   function handleModal() {
     setModalIsVisible(!modalIsVisible);
     setRegisterForm(false);
     setLoginForm(true);
+  }
+
+  function handleModalError() {
+    setModalError(false);
+    resetEmailInput();
   }
 
   function calculateAge(birthdayDate: string) {
@@ -65,7 +74,7 @@ function RegisterForm() {
 
   async function createNewUser() {
     const delayTime = 4000; // 4 seconds
-  
+    if(!formIsValid) return;
     try {
       setLoading(true);
       const createdUser = await createUserWithEmailAndPassword(
@@ -74,23 +83,23 @@ function RegisterForm() {
       );
       console.log(createdUser);
       const user = createdUser?.user;
-  
       const calculatedAge = calculateAge(birthdayDate);
-  
+
       const docRef = await addDoc(usersCollectionRef, {
         uid: user?.uid,
         name: enteredName,
-        imageUser: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngarts.com%2Fpt%2Fexplore%2F215270&psig=AOvVaw1vt2v_CGcelG-CdAT5iUo0&ust=1693172385057000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCPC06oOl-4ADFQAAAAAdAAAAABA5",
+        imageUser:
+          'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngarts.com%2Fpt%2Fexplore%2F215270&psig=AOvVaw1vt2v_CGcelG-CdAT5iUo0&ust=1693172385057000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCPC06oOl-4ADFQAAAAAdAAAAABA5',
         birthdayDate: birthdayDate,
         age: calculatedAge,
         country: countryRegister,
         profession: professionRegister,
         city: cityRegister,
-        civilStatus: selectedStatus,
+        civilStatus: selectedStatus
       });
-  
+
       console.log('Document written with ID: ', docRef.id);
-  
+
       resetEmailInput();
       resetPasswordInput();
       resetNameInput();
@@ -98,18 +107,17 @@ function RegisterForm() {
       resetCountryRegisterInput();
       resetProfessionRegisterInput();
       resetCityRegisterInput();
-  
 
       setTimeout(() => {
         setLoading(false);
         setModalIsVisible(true);
-
       }, delayTime);
     } catch (error) {
       console.log('Erro na criação de usuário', error);
+      setLoading(false);
+      setModalError(true);
     }
   }
-  
 
   const {
     value: enteredEmail,
@@ -176,119 +184,140 @@ function RegisterForm() {
     reset: resetNameInput
   } = UserInput(value => value.trim() !== '');
 
+  const formIsValid = emailIsValid && passwordIsValid;
+
   return (
     <>
-    {loading && (<PacmanLoader color='#ED6D25' loading={loading} size={30} cssOverride={override} />)}
-    {!loading && (<>
-      <div>
-        <Input
-          type="email"
-          id="email"
-          value={enteredEmail}
-          onChange={emailChangeHandler}
-          onBlur={emailBlurHandler}
-          emailIsValid={emailIsValid}
-          emailIsInvalid={emailHasError}
-          placeholder="E-mail"
+      {loading && (
+        <PacmanLoader
+          color="#ED6D25"
+          loading={loading}
+          size={30}
+          cssOverride={override}
         />
-        {emailHasError && (
-          <p className="error-text">Por favor, insira um e-mail válido.</p>
-        )}
-      </div>
-      <div>
-        <Input
-          type="password"
-          id="password"
-          value={enteredPassword}
-          onChange={passwordChangeHandler}
-          onBlur={passwordBlurHandler}
-          passwordIsValid={passwordIsValid}
-          passwordIsInvalid={passwordHasError}
-          placeholder="Senha"
+      )}
+      {!loading && (
+        <>
+          <div>
+            <Input
+              type="email"
+              id="email"
+              value={enteredEmail}
+              onChange={emailChangeHandler}
+              onBlur={emailBlurHandler}
+              emailIsValid={emailIsValid}
+              emailIsInvalid={emailHasError}
+              placeholder="E-mail"
+            />
+            {emailHasError && (
+              <p className="error-text">Por favor, insira um e-mail válido.</p>
+            )}
+          </div>
+          <div>
+            <Input
+              type="password"
+              id="password"
+              value={enteredPassword}
+              onChange={passwordChangeHandler}
+              onBlur={passwordBlurHandler}
+              passwordIsValid={passwordIsValid}
+              passwordIsInvalid={passwordHasError}
+              placeholder="Senha"
+            />
+            {passwordHasError && (
+              <p className="error-text">Por favor, insira uma senha válida.</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              type="text"
+              placeholder="Nome"
+              value={enteredName}
+              onChange={nameChangeHandler}
+              onBlur={nameBlurHandler}
+              nameIsValid={nameIsValid}
+              nameIsInvalid={nameHasError}
+            />
+          </div>
+
+          <FormContainerRegister>
+            <div>
+              <Input
+                type="date"
+                id="birthdayDate"
+                value={birthdayDate}
+                onChange={birthdayDateChangeHandler}
+                onBlur={birthdayDateBlurHandler}
+                birthdayDateIsValid={birthdayDateIsValid}
+                birthdayDateIsInvalid={birthdayDateHasError}
+                placeholder="yy/mm/dd"
+              />
+
+              <Input
+                type="text"
+                id="countryRegister"
+                value={countryRegister}
+                onChange={countryRegisterChangeHandler}
+                onBlur={countryRegisterBlurHandler}
+                countryIsValid={countryRegisterIsValid}
+                countryIsInvalid={countryRegisterHasError}
+                placeholder="País"
+              />
+            </div>
+            <div>
+              <Input
+                type="text"
+                id="professionRegister"
+                value={professionRegister}
+                onChange={professionRegisterChangeHandler}
+                onBlur={professionRegisterBlurHandler}
+                professionIsValid={professionRegisterIsValid}
+                professionIsInvalid={professionRegisterHasError}
+                placeholder="Profissão"
+              />
+
+              <Input
+                type="text"
+                id="cityRegister"
+                value={cityRegister}
+                onChange={cityRegisterChangeHandler}
+                onBlur={cityRegisterBlurHandler}
+                cityIsValid={cityRegisterIsValid}
+                cityIsInvalid={cityRegisterHasError}
+                placeholder="Cidade"
+              />
+            </div>
+          </FormContainerRegister>
+          <SelectContainer>
+            <select value={selectedStatus} onChange={handleStatusChange}>
+              <option value="" disabled>
+                Relacionamento
+              </option>
+              {civilStatusOptions.map(status => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            <img src={caretDown} alt="" />
+          </SelectContainer>
+          <LoginButton type="submit" onClick={createNewUser}>
+            Criar conta
+          </LoginButton>
+        </>
+      )}
+      {modalIsVisible && (
+        <Modal
+          imageLogo={''}
+          text={'Conta criada com sucesso 🎉'}
+          buttonContent={'Voltar para o login'}
+          buttonFunction={handleModal}
         />
-        {passwordHasError && (
-          <p className="error-text">Por favor, insira uma senha válida.</p>
-        )}
-      </div>
-
-      <div>
-        <Input
-          type="text"
-          placeholder="Nome"
-          value={enteredName}
-          onChange={nameChangeHandler}
-          onBlur={nameBlurHandler}
-          nameIsValid={nameIsValid}
-          nameIsInvalid={nameHasError}
-        />
-      </div>
-
-      <FormContainerRegister>
-        <div>
-          <Input
-            type="date"
-            id="birthdayDate"
-            value={birthdayDate}
-            onChange={birthdayDateChangeHandler}
-            onBlur={birthdayDateBlurHandler}
-            birthdayDateIsValid={birthdayDateIsValid}
-            birthdayDateIsInvalid={birthdayDateHasError}
-            placeholder="yy/mm/dd"
-          />
-
-          <Input
-            type="text"
-            id="countryRegister"
-            value={countryRegister}
-            onChange={countryRegisterChangeHandler}
-            onBlur={countryRegisterBlurHandler}
-            countryIsValid={countryRegisterIsValid}
-            countryIsInvalid={countryRegisterHasError}
-            placeholder="País"
-          />
-        </div>
-        <div>
-          <Input
-            type="text"
-            id="professionRegister"
-            value={professionRegister}
-            onChange={professionRegisterChangeHandler}
-            onBlur={professionRegisterBlurHandler}
-            professionIsValid={professionRegisterIsValid}
-            professionIsInvalid={professionRegisterHasError}
-            placeholder="Profissão"
-          />
-
-          <Input
-            type="text"
-            id="cityRegister"
-            value={cityRegister}
-            onChange={cityRegisterChangeHandler}
-            onBlur={cityRegisterBlurHandler}
-            cityIsValid={cityRegisterIsValid}
-            cityIsInvalid={cityRegisterHasError}
-            placeholder="Cidade"
-          />
-        </div>
-      </FormContainerRegister>
-      <SelectContainer>
-        <select value={selectedStatus} onChange={handleStatusChange}>
-          <option value="" disabled>
-            Relacionamento
-          </option>
-          {civilStatusOptions.map(status => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
-        <img src={caretDown} alt="" />
-      </SelectContainer>
-      <LoginButton type="submit" onClick={createNewUser}>
-        Criar conta
-      </LoginButton>
-    </>)}
-      {modalIsVisible && <Modal imageLogo={""} text={"Conta criada com sucesso 🎉"} buttonContent={"Voltar para o login"} buttonFunction={handleModal} />}
+      )}
+      {ModalError && (
+        <Modal imageLogo={''} text={'Email ja cadastrado ❌'} buttonContent={'Tentar novamente'} buttonFunction={handleModalError}/> 
+      )}
     </>
   );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ProfileHeader, UserProfile } from './style';
-
+import gabriel from '../../assets/img/gabriel.svg';
 interface UserProfileHeaderProps {
   name: string;
   status: string;
@@ -20,7 +20,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   return (
     <ProfileHeader>
       <UserProfile>
-        <img src={imageUser} alt="" />
+        <img src={gabriel} alt="" />
         <h2>{name}</h2>
         <p>{status}</p>
       </UserProfile>

@@ -1,4 +1,12 @@
 import styled from "styled-components";
+import CaretDown from "../../assets/icons/caret-down.svg";
+import { InputHTMLAttributes } from "react";
+
+
+interface StyledInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  userSearch?: boolean;
+}
+
 
 export const ProfileInfoSection = styled.section`
   width: 100%;
@@ -27,6 +35,7 @@ export const ProfileInfoSection = styled.section`
       height: 100%;
       justify-content: center;
       margin: 0 auto;
+      padding: 1rem;
       
       > h2{
         font-size: 1.25rem;
@@ -34,7 +43,7 @@ export const ProfileInfoSection = styled.section`
   }
 `;
 
-export const Triangle = styled.div`
+export const Triangle = styled.div<StyledInputProps>`
   position: absolute;
   left: 38%; 
   top: 15.125rem;
@@ -42,6 +51,8 @@ export const Triangle = styled.div`
   border-left: 0.625rem solid transparent;
   border-right: 0.625rem solid transparent;
   border-bottom: 0.625rem solid var(--bg-text); 
+
+  ${props => props.userSearch && `top: 17rem;`}
 
   @media (max-width: 60.5rem) {
     display: none;
@@ -88,16 +99,19 @@ export const QualitiesContainer = styled.div`
   margin-top: 2rem;
   width: 70%;
   margin-bottom: 2rem;
+  gap: 2.5rem;
 
   img {
     width: 1.5rem;
     height: 1.5rem;
     margin-right: 0.375rem;
+   
   }
 
   img:hover{
     cursor: pointer;
-    scale: 1.1;
+    scale: 1.1;  
+   
   }
 
   h3{
@@ -113,11 +127,12 @@ export const QualitiesContainer = styled.div`
       justify-content: space-between;
       margin: 0 auto;
       margin-bottom: 2.5rem;
+      gap: 1.5rem;
 
       img {
-        width: 1.25rem;
-        height: 1.25rem;
-        margin-right: 0.375rem;
+        
+        height: 1rem;
+        gap: 0rem
       }
 
       h3{
@@ -131,7 +146,7 @@ export const StarContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 0.375rem;
+  
 
   > p{
     font-size: 1rem;
@@ -142,6 +157,19 @@ export const StarContainer = styled.div`
 
   @media (max-width: 36.875rem) {
     gap: 0;
+    margin-bottom: 1rem;
+    
+
+    > p {
+      font-size: 0.75rem;
+
+    }
+
+    > img {
+      width: 1rem;
+      height: 1rem;
+      
+    }
   }
 `;
 
@@ -236,3 +264,17 @@ export const UserInterests=  styled.section`
   }
 `;
 
+export const ContainerImageBack= styled.img`
+  
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.375rem;
+  cursor: pointer;
+  rotate: 90deg;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 0.5rem;
+  
+  &:hover {
+    scale: 1.1;
+  }
+`;

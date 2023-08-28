@@ -9,6 +9,7 @@ import { UserContext } from '../../context/user-context';
 import { useNavigate } from 'react-router';
 import { collection, query, where, getDocs,getFirestore} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import Cookies from 'js-cookie';
 
 interface User {
   name: string;
@@ -28,18 +29,25 @@ function Profile() {
   setUserIsLogged(true);
   }, [setUserIsLogged]);
 
+  
 
-
+  const uid = Cookies.get('userUid');
 
   useEffect(() => {
     const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, user => {
       if (user) {
-        const storedUserData = localStorage.getItem('userData');
+        const storedUserData = Cookies.get('userData');
+        const storedSearchUser = Cookies.get('userSearch');
         if (storedUserData) {
+          console.log('achei');
           setUserData(JSON.parse(storedUserData));
+        }
+        if (storedSearchUser) {
+          console.log('pesquisei');
+          setUserData(JSON.parse(storedSearchUser));
         } else {
-          getUserData(userUid);
+          getUserData(uid || '');
         }
       }
     });
@@ -48,8 +56,7 @@ function Profile() {
   const getUserData = async (uid : string) => {
     setLoading(true);
     try {
-      console.log(userUid);
-      console.log('teste');
+  
       const db = getFirestore();
       const q = query(collection(db, "users"), where("uid", "==", uid));
   
@@ -57,7 +64,7 @@ function Profile() {
       querySnapshot.forEach((doc) => {
         console.log(doc.id, " => ", doc.data());
         setUserData(doc.data() as User);
-        localStorage.setItem('userData', JSON.stringify(doc.data()));
+          Cookies.set('userData', JSON.stringify(doc.data()));
       });
       setLoading(false);
     } catch (error) { 

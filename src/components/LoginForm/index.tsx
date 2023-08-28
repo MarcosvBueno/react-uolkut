@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '../Modal';
 import {signInWithEmailAndPassword,getAuth } from 'firebase/auth';
 import PacmanLoader from 'react-spinners/PacmanLoader';
-
+import Cookies from 'js-cookie';
 function LoginForm() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -63,32 +63,35 @@ function LoginForm() {
     setRememberPassword(e.target.checked);
   };
 
-  const handleLoginForm = () => {
+  const handleLoginForm = async () => {
     setLoading(true);
     const auth = getAuth();
     const delayTime = 4000; // 4 seconds
-    
 
     setTimeout(() => {
-      signInWithEmailAndPassword(auth, enteredEmail, enteredPassword)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          console.log(user);
-          setLoading(false);
-          console.log("Login feito com sucesso:", user?.uid);
-          setUserUid(user?.uid);
-          navigate('/profile', { replace: true });
+    signInWithEmailAndPassword(auth, enteredEmail, enteredPassword)
+      .then(async userCredential => {
 
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
-          setLoading(false);
-          setModalIsVisible(true);
-          resetEmailInput();
-          resetPasswordInput();
-        });
+        const user = userCredential.user;
+        setLoading(false);
+        console.log('Login feito com sucesso:', user?.uid);
+        const token = await user.getIdToken();
+        setUserUid(user?.uid);
+        Cookies.set('tokenAuth', token);
+        Cookies.set('userUid', user?.uid);
+        console.log(token);
+        navigate('/profile', { replace: true });
+
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        setLoading(false);
+        setModalIsVisible(true);
+        resetEmailInput();
+        resetPasswordInput();
+      });
     }, delayTime);
   };
   
